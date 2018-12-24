@@ -15,7 +15,7 @@ import datetime
 wdir = "data/%s" % datetime.datetime.today().strftime('%Y-%m-%d')
 if not os.path.exists(wdir):
     os.makedirs(wdir)
-stations = pd.read_csv('data/stations_v1.txt', sep='|')
+stations = pd.read_csv('stations_v1.txt', sep='|')
 for irow, srow in stations.iterrows():
     station_name = srow['station']
     station_id = srow['id']
@@ -28,7 +28,7 @@ for irow, srow in stations.iterrows():
     if cn_temperature > 0:
         with open('%s/temperature_%s.png' % (wdir, station_name), 'wb') as f:
             f.write(requests.get('http://www.hladiny.cz/snih/draw_image.php?stN=%d&act=DG&cN=%d' % (station_id, cn_temperature)).content)
-stations2 = pd.read_csv('data/stations_v2.txt', sep='|')
+stations2 = pd.read_csv('stations_v2.txt', sep='|')
 for irow, srow in stations2.iterrows():
     station_name = srow['station']
     plot_url = srow['url']
