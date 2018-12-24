@@ -1,0 +1,5 @@
+station|url
+breznik|http://portal.chmi.cz/files/portal/docs/poboc/PR/grafy/2/C7BLVR01.PNG
+plechy|http://portal.chmi.cz/files/portal/docs/poboc/PR/grafy/2/C7PLCH01.PNG
+bucina|http://portal.chmi.cz/files/portal/docs/poboc/PR/grafy/2/C7BUCI01.PNG
+rozmezi|http://portal.chmi.cz/files/portal/docs/poboc/PR/grafy/1/P4JDRO01.PNG
