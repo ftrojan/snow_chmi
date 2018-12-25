@@ -14,7 +14,7 @@ url = "http://portal.chmi.cz/aktualni-situace/aktualni-stav-pocasi/ceska-republi
 driver = webdriver.PhantomJS()
 driver.get(url)
 table = driver.find_element_by_id(id_='right-content-wide')
-with open('%s/manualmeasure.txt' % wdir, 'w', encoding="utf-8") as f:
+with open('%s/chmi_manualmeasure.txt' % wdir, 'w', encoding="utf-8") as f:
     f.write("station|elevation|snowdepth_new|snowdepth_total\n")
     for row in table.find_elements_by_class_name("portlet-table-body"): # odd rows
         cell = row.find_elements_by_tag_name("td")
