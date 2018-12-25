@@ -3,3 +3,6 @@ chcp 65001
 python download_snow_chmi.py
 python download_snow_chmi_manualmeasure.py
 python download_holidayinfo.py
+python download_sumavaeu.py
+python download_snow_chmi_oah.py
+python download_bergfex.py
