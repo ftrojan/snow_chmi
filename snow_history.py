@@ -9,6 +9,7 @@ import os
 from dfply import X, mutate, select, rename
 import re
 
+
 def date_cz2iso(cz):
     p = re.compile('(\d+)\.(\d+)\.(\d+)')
     m = p.match(cz)
@@ -18,6 +19,7 @@ def date_cz2iso(cz):
     iso = "%04d-%02d-%02d" % (int(yyyy), int(mm), int(dd))
     return iso
 
+
 def snow_sumavaeu(x):
     p = re.compile('(\d+) cm')
     m = p.match(x)
@@ -26,6 +28,13 @@ def snow_sumavaeu(x):
     else:
         y = m.group(1)
     return y
+
+
+def country_bergfex2iso(c):
+    lkp = {"oesterreich":'at', "schweiz":'ch', "deutschland":'de', "italien":'it', "slovenia":'sl', "frankreich":'fr'}
+    y = lkp.get(c, 'NA')
+    return y
+
 
 sh = list()
 for d in os.listdir("data"):
@@ -65,5 +74,14 @@ for d in os.listdir("data"):
             y04['snow'] = [snow_sumavaeu(row['snowdepth']) for i, row in d04.iterrows()]
             y04 = y04 >> select(X.date_valid, X.country, X.source, X.station, X.snow)
             sh.append(y04)
+        f05 = "data/%s/bergfex.txt" % d
+        if os.path.isfile(f05):
+            d05 = pd.read_csv(f05, sep="|")
+            y05 = d05 >> \
+                mutate(source = 'bergfex') >> \
+                rename(date_valid = X.date, snow = X.snowdepth_mountain)
+            y05['country'] = [country_bergfex2iso(row['country']) for i, row in d05.iterrows()]
+            y05 = y05 >> select(X.date_valid, X.country, X.source, X.station, X.snow)
+            sh.append(y05)
 df = pd.concat(sh, ignore_index=True)
 df.to_csv("data/snow_history.txt", sep="\t", index=False, encoding='utf-8')

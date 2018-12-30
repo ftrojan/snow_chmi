@@ -60,15 +60,27 @@ server <- function(input, output) {
    output$snow <- renderPlot({
      tc = seq(0, 100, by = 10)
      if (input$lod == "World") {
-       ggplot(sh, aes(x = factor(as.Date(date_valid)), y = snow, color = country)) +
+       ggplot(sh, aes(x = factor(as.Date(date_valid)), y = snow)) +
          scale_y_continuous(breaks = tc, minor_breaks = tc, limits = c(0, 100)) + 
+         geom_boxplot() +
+         theme_bw()
+     } else if (input$lod == "Country") {
+       xs = sh %>% filter(station == input$station)
+       cs = xs$country[1]
+       x = sh %>% filter(country == cs)
+       sm = pmax(10*ceiling((max(x$snow, na.rm = TRUE) + 5)/10), 100)
+       tc = seq(0, sm, by = 10)
+       ggplot(x, aes(x = factor(as.Date(date_valid)), y = snow, color = country)) +
+         scale_y_continuous(breaks = tc, minor_breaks = tc, limits = c(0, sm)) + 
          geom_boxplot() +
          theme_bw()
      } else {
        x = sh %>% filter(station == input$station)
        if (nrow(x) > 0) {
+         sm = pmax(10*ceiling((max(x$snow, na.rm = TRUE) + 5)/10), 100)
+         tc = seq(0, sm, by = 10)
          ggplot(x, aes(x = date_valid, y = snow, color = source)) +
-           scale_y_continuous(breaks = tc, minor_breaks = tc, limits = c(0, 100)) + 
+           scale_y_continuous(breaks = tc, minor_breaks = tc, limits = c(0, sm)) + 
            geom_line(size = 2, alpha = 0.6) + 
            geom_point() +
            theme_bw()
