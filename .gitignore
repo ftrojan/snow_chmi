@@ -108,3 +108,4 @@ data/*
 
 # secrets
 graphhopper.com.txt
+.Rproj.user
