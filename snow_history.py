@@ -36,6 +36,16 @@ def country_bergfex2iso(c):
     return y
 
 
+def date_sk2iso(cz):
+    p = re.compile('(\d+)\.\s*(\d+)\.\s*(\d+)')
+    m = p.match(cz)
+    dd = m.group(1)
+    mm = m.group(2)
+    yyyy = m.group(3)
+    iso = "%04d-%02d-%02d" % (int(yyyy), int(mm), int(dd))
+    return iso
+
+
 sh = list()
 for d in os.listdir("data"):
     print(d)
@@ -83,5 +93,14 @@ for d in os.listdir("data"):
             y05['country'] = [country_bergfex2iso(row['country']) for i, row in d05.iterrows()]
             y05 = y05 >> select(X.date_valid, X.country, X.source, X.station, X.snow)
             sh.append(y05)
+        f06 = "data/%s/snehove_sk.txt" % d
+        if os.path.isfile(f06):
+            d06 = pd.read_csv(f06, sep="|")
+            y06 = d06 >> \
+                mutate(source = 'snehove_sk') >> \
+                rename(snow = X.snowdepth)
+            y06['date_valid'] = [date_sk2iso(row['date']) for i, row in d06.iterrows()]
+            y06 = y06 >> select(X.date_valid, X.country, X.source, X.station, X.snow)
+            sh.append(y06)
 df = pd.concat(sh, ignore_index=True)
 df.to_csv("data/snow_history.txt", sep="\t", index=False, encoding='utf-8')

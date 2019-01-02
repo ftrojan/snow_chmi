@@ -7,3 +7,4 @@ python download_snow_chmi_resorts.py
 python download_holidayinfo.py
 python download_sumavaeu.py
 python download_bergfex.py
+python download_snehove_sk.py
