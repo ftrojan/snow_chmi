@@ -37,6 +37,14 @@ def country_bergfex2iso(c):
     return y
 
 
+def date_bergfex2iso(datestring):
+    if type(datestring) == float: # nan
+        iso = ""
+    else:
+        iso = datestring[:10]
+    return iso
+
+
 def snow_snehovesk(x):
     p = re.compile('(\d+) cm')
     m = p.match(x)
@@ -72,15 +80,15 @@ def date_jeseniky2iso(cz, filedate):
     m = p.match(cz)
     dd = int(m.group(1))
     mm = int(m.group(2))
-    hh = m.group(3)
+    #hh = m.group(3) # not used
     # https://stackoverflow.com/questions/969285/how-do-i-translate-an-iso-8601-datetime-string-into-a-python-datetime-object
     fdt = dateutil.parser.parse(filedate)
     yy = fdt.year
     d1 = dateutil.parser.parse("%04d-%02d-%02d" % (yy, mm, dd))
     if d1 <= fdt: # in the past
-        iso = "%04d-%02d-%02d %s" % (yy, int(mm), int(dd), hh)
+        iso = "%04d-%02d-%02d" % (yy, int(mm), int(dd))
     else: # can happen at the year beginning
-        iso = "%04d-%02d-%02d %s" % (yy-1, int(mm), int(dd), hh)
+        iso = "%04d-%02d-%02d" % (yy-1, int(mm), int(dd))
     return iso
 
 
@@ -127,7 +135,8 @@ for d in os.listdir("data"):
             d05 = pd.read_csv(f05, sep="|")
             y05 = d05 >> \
                 mutate(source = 'bergfex') >> \
-                rename(date_valid = X.date, snow = X.snowdepth_mountain)
+                rename(snow = X.snowdepth_mountain)
+            y05['date_valid'] = [date_bergfex2iso(row.at['date']) for i, row in d05.iterrows()]
             y05['country'] = [country_bergfex2iso(row['country']) for i, row in d05.iterrows()]
             y05 = y05 >> select(X.date_valid, X.country, X.source, X.station, X.snow)
             sh.append(y05)
