@@ -14,7 +14,7 @@ if not os.path.exists(wdir):
     os.makedirs(wdir)
 
 url = "http://portal.chmi.cz/aktualni-situace/aktualni-stav-pocasi/ceska-republika/snehove-zpravodajstvi/mereni-chmu/mereni-OAH"
-driver = webdriver.PhantomJS()
+driver = webdriver.Safari()
 driver.get(url)
 table = driver.find_element_by_id(id_='loadedcontent')
 with open('%s/chmi_oah.txt' % wdir, 'w', encoding="utf-8") as f:
@@ -31,3 +31,4 @@ with open('%s/chmi_oah.txt' % wdir, 'w', encoding="utf-8") as f:
             datarow = "%s|%s|%s|%s" % (cell[0].text, cell[1].text, cell[2].text, cell[3].text)
             print(datarow)
             f.write("%s\n" % datarow)
+driver.quit()

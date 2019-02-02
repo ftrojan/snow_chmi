@@ -13,8 +13,8 @@ wdir = "data/%s" % datetime.datetime.today().strftime('%Y-%m-%d')
 if not os.path.exists(wdir):
     os.makedirs(wdir)
 
-driver = webdriver.PhantomJS()
-driver_resort = webdriver.PhantomJS()
+driver = webdriver.Safari()
+list_resorts = list()
 url = "http://www.snehove-spravodajstvo.sk"
 driver.get(url)
 panel = driver.find_element_by_id(id_='navbar-collapse')
@@ -22,11 +22,15 @@ resorts = panel.find_elements_by_tag_name("a")
 with open('%s/snehove_sk.txt' % wdir, 'w', encoding="utf-8") as f:
     f.write("country|url|station|snowdepth|date\n")
     country = "sk"
+    print("gathering resorts")
     for resort in resorts:
         resort_url = resort.get_attribute('href')
         print(resort_url)
-        driver_resort.get(resort_url)
-        subpage = driver_resort.find_element_by_id(id_='subpage')
+        list_resorts.append(resort_url)
+    print("resorts gathered")
+    for resort_url in list_resorts:
+        driver.get(resort_url)
+        subpage = driver.find_element_by_id(id_='subpage')
         tbodies = subpage.find_elements_by_tag_name("tbody")
         for tbody in tbodies:
             for row in tbody.find_elements_by_tag_name("tr"): # table row
@@ -35,3 +39,4 @@ with open('%s/snehove_sk.txt' % wdir, 'w', encoding="utf-8") as f:
                     datarow = "%s|%s|%s|%s|%s" % (country, resort_url, cell[1].text, cell[2].text, cell[3].text)
                     print(datarow)
                     f.write("%s\n" % datarow)
+driver.quit()

@@ -4,14 +4,17 @@ Created on Mon Dec 24 19:43:34 2018
 
 @author: com-ftrojan
 """
+import os
 import datetime
 from selenium import webdriver
 
 # https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory-in-python
 wdir = "data/%s" % datetime.datetime.today().strftime('%Y-%m-%d')
+if not os.path.exists(wdir):
+    os.makedirs(wdir)
 
 url = "http://www.holidayinfo.cz/en/snowinfo"
-driver = webdriver.PhantomJS()
+driver = webdriver.Safari()
 driver.get(url)
 table = driver.find_element_by_id(id_='datarows')
 with open('%s/holidayinfo.cz.txt' % wdir, 'w', encoding="utf-8") as f:
@@ -28,3 +31,4 @@ with open('%s/holidayinfo.cz.txt' % wdir, 'w', encoding="utf-8") as f:
             datarow = "%s|%s|%s|%s|%s|%s|%s" % (cell[1].text, cell[2].text, cell[3].text, cell[4].text, cell[5].text, cell[6].text, cell[7].text)
             print(datarow)
             f.write("%s\n" % datarow)
+driver.quit()

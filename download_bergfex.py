@@ -14,7 +14,7 @@ if not os.path.exists(wdir):
     os.makedirs(wdir)
 
 list_countries = ["oesterreich", "schweiz", "deutschland", "italien", "slovenia", "frankreich"]
-driver = webdriver.PhantomJS()
+driver = webdriver.Safari()
 with open('%s/bergfex.txt' % wdir, 'w', encoding="utf-8") as f:
     f.write("country|station|snowdepth_valley|snowdepth_mountain|snowdepth_new|lifts|date\n")
     for country in list_countries:
@@ -27,3 +27,4 @@ with open('%s/bergfex.txt' % wdir, 'w', encoding="utf-8") as f:
                 datarow = "%s|%s|%s|%s|%s|%s|%s" % (country, cell[0].get_attribute('data-value'), cell[1].get_attribute('data-value'), cell[2].get_attribute('data-value'), cell[3].get_attribute('data-value'), cell[4].get_attribute('data-value'), cell[6].get_attribute('data-value'))
                 print(datarow)
                 f.write("%s\n" % datarow)
+driver.quit()
