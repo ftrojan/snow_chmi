@@ -12,7 +12,7 @@ import dateutil.parser
 
 
 def date_cz2iso(cz):
-    p = re.compile('(\d+)\.(\d+)\.(\d+)')
+    p = re.compile(r'(\d+)\.(\d+)\.(\d+)')
     m = p.match(cz)
     dd = m.group(1)
     mm = m.group(2)
@@ -22,7 +22,7 @@ def date_cz2iso(cz):
 
 
 def snow_sumavaeu(x):
-    p = re.compile('(\d+) cm')
+    p = re.compile(r'(\d+) cm')
     m = p.match(x)
     if m is None:
         y = ''
@@ -46,7 +46,7 @@ def date_bergfex2iso(datestring):
 
 
 def snow_snehovesk(x):
-    p = re.compile('(\d+) cm')
+    p = re.compile(r'(\d+) cm')
     m = p.match(x)
     if m is None:
         y = ''
@@ -56,7 +56,7 @@ def snow_snehovesk(x):
 
 
 def date_sk2iso(cz):
-    p = re.compile('(\d+)\.\s*(\d+)\.\s*(\d+)')
+    p = re.compile(r'(\d+)\.\s*(\d+)\.\s*(\d+)')
     m = p.match(cz)
     dd = m.group(1)
     mm = m.group(2)
@@ -66,7 +66,7 @@ def date_sk2iso(cz):
 
 
 def snow_jesenikynet(x):
-    p = re.compile('(\d+) cm')
+    p = re.compile(r'(\d+) cm')
     m = p.match(x)
     if m is None:
         y = ''
@@ -76,11 +76,11 @@ def snow_jesenikynet(x):
 
 
 def date_jeseniky2iso(cz, filedate):
-    p = re.compile('(\d+)\.\s*(\d+)\.\s*(\d+:\d+)')
+    p = re.compile(r'(\d+)\.\s*(\d+)\.\s*(\d+:\d+)')
     m = p.match(cz)
     dd = int(m.group(1))
     mm = int(m.group(2))
-    #hh = m.group(3) # not used
+    # hh = m.group(3) # not used
     # https://stackoverflow.com/questions/969285/how-do-i-translate-an-iso-8601-datetime-string-into-a-python-datetime-object
     fdt = dateutil.parser.parse(filedate)
     yy = fdt.year
@@ -158,5 +158,5 @@ for d in os.listdir("data"):
             y07['date_valid'] = [date_jeseniky2iso(row['date'], d) for i, row in d07.iterrows()]
             y07 = y07 >> select(X.date_valid, X.country, X.source, X.station, X.snow)
             sh.append(y07)
-df = pd.concat(sh, ignore_index=True)
+df = pd.concat(sh, ignore_index=True, sort=False)
 df.to_csv("data/snow_history.txt", sep="\t", index=False, encoding='utf-8')
