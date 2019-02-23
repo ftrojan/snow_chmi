@@ -21,10 +21,17 @@ with open('%s/bergfex.txt' % wdir, 'w', encoding="utf-8") as f:
         url = "https://www.bergfex.com/%s/schneewerte/" % country
         driver.get(url)
         table = driver.find_element_by_id(id_='detail')
-        for row in table.find_elements_by_tag_name("tr"): # odd rows
+        rows = table.find_elements_by_tag_name("tr")
+        for row in rows:  # odd rows
             cell = row.find_elements_by_tag_name("td")
-            if len(cell) >= 7:
-                datarow = "%s|%s|%s|%s|%s|%s|%s" % (country, cell[0].get_attribute('data-value'), cell[1].get_attribute('data-value'), cell[2].get_attribute('data-value'), cell[3].get_attribute('data-value'), cell[4].get_attribute('data-value'), cell[6].get_attribute('data-value'))
+            if len(cell) >= 6:
+                resort = cell[0].get_attribute('data-value')
+                snowdepth_valley = cell[1].get_attribute('data-value')
+                snowdepth_mountain = cell[2].get_attribute('data-value')
+                snowdepth_new = cell[3].get_attribute('data-value')
+                lifts = cell[4].get_attribute('data-value')
+                date = cell[5].get_attribute('data-value')
+                datarow = f"{country}|{resort}|{snowdepth_valley}|{snowdepth_mountain}|{snowdepth_new}|{lifts}|{date}"
                 print(datarow)
                 f.write("%s\n" % datarow)
 driver.quit()
